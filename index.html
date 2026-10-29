@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Language Chunks</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,'Yu Gothic',sans-serif;background:#edf5f8;color:#29475b;padding:28px 15px}main{max-width:720px;margin:auto}header{text-align:center;margin-bottom:24px}h1{color:#287a98;margin-bottom:6px}h2{font-size:1.15rem;margin-top:0}.panel{background:#fff;border-radius:18px;padding:24px;margin:18px 0;box-shadow:0 4px 15px #00000010}label{display:block;font-weight:bold;margin:14px 0 6px}input,select{width:100%;font:inherit;padding:12px;border:1px solid #b8d1dd;border-radius:10px}button{background:#287a98;color:#fff;border:0;border-radius:10px;padding:12px 18px;font:inherit;cursor:pointer}button:hover{background:#1c5f77}.secondary{background:#e9f2f5;color:#29475b}.secondary:hover{background:#d6e7ed}.toolbar{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}.toolbar select{width:auto}.chunk{border-top:1px solid #e1edf1;padding:17px 0}.chunk p{margin:8px 0;overflow-wrap:anywhere}.lang{font-size:.8rem;color:#47778a}.empty{color:#6c8490}small{color:#6c8490}footer{text-align:center;color:#718a96;font-size:.85rem;margin-top:25px}
+</style>
+</head>
+<body>
+<main>
+<header><h1>My Language Chunks ✈️</h1><p>Every day, a little progress.</p></header>
+<section class="panel">
+<h2>新しいチャンクを登録</h2>
+<form id="chunkForm">
+<label for="language">言語</label><select id="language"><option value="en">🇬🇧 English</option><option value="de">🇩🇪 Deutsch</option></select>
+<label for="expression">単語・チャンク</label><input id="expression" required maxlength="500" placeholder="例：What matters is to keep trying.">
+<label for="translation">日本語訳</label><input id="translation" required maxlength="500" placeholder="例：大切なのは挑戦し続けること。">
+<p><button type="submit">＋ 登録する</button></p>
+</form>
+</section>
+<section class="panel">
+<div class="toolbar"><h2>登録した表現 <span id="count">(0)</span></h2><select id="filter" aria-label="言語で絞り込み"><option value="all">すべて</option><option value="en">🇬🇧 English</option><option value="de">🇩🇪 Deutsch</option></select></div>
+<div id="list" aria-live="polite"></div>
+</section>
+<footer>My Language Chunks · Version 0.2</footer>
+</main>
+<script>
+'use strict';
+const KEY='my-language-chunks-v1';
+let chunks=[];
+try {const stored=JSON.parse(localStorage.getItem(KEY)||'[]');if(Array.isArray(stored))chunks=stored.filter(x=>x&&typeof x.text==='string'&&typeof x.ja==='string'&&['en','de'].includes(x.lang));}catch(e){alert('保存データを読み込めませんでした。新しく登録する前にご相談ください。');}
+const form=document.getElementById('chunkForm');
+const list=document.getElementById('list');
+const filter=document.getElementById('filter');
+function save(){try{localStorage.setItem(KEY,JSON.stringify(chunks));return true;}catch(e){alert('保存できませんでした。ブラウザの保存設定や空き容量をご確認ください。');return false;}}
+function render(){list.replaceChildren();document.getElementById('count').textContent=`(${chunks.length})`;const visible=chunks.filter(x=>filter.value==='all'||x.lang===filter.value);if(!visible.length){const p=document.createElement('p');p.className='empty';p.textContent='まだ表示するチャンクがありません。';list.append(p);return;}
+visible.slice().reverse().forEach(item=>{const article=document.createElement('article');article.className='chunk';const tag=document.createElement('div');tag.className='lang';tag.textContent=item.lang==='en'?'🇬🇧 English':'🇩🇪 Deutsch';const text=document.createElement('p');const strong=document.createElement('strong');strong.textContent=item.text;text.append(strong);const ja=document.createElement('p');ja.textContent=item.ja;const button=document.createElement('button');button.className='secondary';button.textContent='削除';button.addEventListener('click',()=>{if(!confirm('このチャンクを削除しますか？'))return;const before=chunks;chunks=chunks.filter(x=>x.id!==item.id);if(!save())chunks=before;render();});article.append(tag,text,ja,button);list.append(article);});}
+form.addEventListener('submit',e=>{e.preventDefault();const text=document.getElementById('expression').value.trim();const ja=document.getElementById('translation').value.trim();if(!text||!ja)return;const item={id:crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random(),lang:document.getElementById('language').value,text,ja};chunks.push(item);if(!save()){chunks.pop();return;}form.reset();render();document.getElementById('expression').focus();});
+filter.addEventListener('change',render);render();
+</script>
+</body>
+</html>
