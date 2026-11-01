@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>My Language Chunks · Version 0.8</title>
+<html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>My Language Chunks · Version 0.9</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:Arial,'Yu Gothic',Meiryo,sans-serif;background:#edf5f8;color:#29475b;padding:28px 15px}main{max-width:760px;margin:auto}header{text-align:center;margin-bottom:24px}h1{color:#287a98;margin-bottom:6px}h2{font-size:1.18rem;margin-top:0}.panel{background:#fff;border-radius:18px;padding:24px;margin:18px 0;box-shadow:0 4px 15px #00000010}label{display:block;font-weight:bold;margin:14px 0 6px}input,select{width:100%;font:inherit;padding:12px;border:1px solid #b8d1dd;border-radius:10px;background:#fff;color:#29475b}button{background:#287a98;color:#fff;border:0;border-radius:10px;padding:12px 18px;font:inherit;cursor:pointer}button:hover{background:#1c5f77}.secondary{background:#e9f2f5;color:#29475b}.secondary:hover{background:#d6e7ed}.toolbar,.actions{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}.actions{justify-content:flex-start}.toolbar select{width:auto}.chunk{border-top:1px solid #e1edf1;padding:17px 0}.chunk p{margin:8px 0;overflow-wrap:anywhere}.lang{font-size:.82rem;color:#47778a}.empty,.hint{color:#6c8490}.status{display:inline-block;background:#e9f2f5;border-radius:20px;padding:5px 10px;font-size:.83rem;margin:8px 0}.question{font-size:1.4rem;font-weight:bold;text-align:center;margin:30px 0;overflow-wrap:anywhere}.answer{font-size:1.3rem;text-align:center;margin:24px 0;font-weight:bold;overflow-wrap:anywhere}footer{text-align:center;color:#718a96;font-size:.85rem;margin-top:25px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.grid label{margin-top:0}.hidden{display:none!important}.small{font-size:.85rem}.notice{background:#f2f8fb;border-radius:10px;padding:10px 12px;font-size:.88rem;margin-top:14px}@media(max-width:520px){.grid{grid-template-columns:1fr}.panel{padding:18px}.toolbar select{width:100%}}
-.listen-status{font-weight:bold;color:#287a98;margin:12px 0}.listen-text{background:#f2f8fb;border-radius:12px;padding:16px;margin:12px 0;overflow-wrap:anywhere}.listen-text strong{display:block;margin-bottom:8px}.listen-controls{display:flex;flex-wrap:wrap;gap:10px}.listen-controls button:disabled{opacity:.5;cursor:not-allowed}.listen-note{font-size:.85rem;color:#6c8490;line-height:1.6}</style></head><body><main>
+.listen-status{font-weight:bold;color:#287a98;margin:12px 0}.listen-text{background:#f2f8fb;border-radius:12px;padding:16px;margin:12px 0;overflow-wrap:anywhere}.listen-text strong{display:block;margin-bottom:8px}.listen-controls{display:flex;flex-wrap:wrap;gap:10px}.listen-controls button:disabled{opacity:.5;cursor:not-allowed}.listen-note{font-size:.85rem;color:#6c8490;line-height:1.6}.wake-state{font-size:.85rem;color:#47778a;margin:8px 0;line-height:1.5}</style></head><body><main>
 <header><h1>My Language Chunks ✈️</h1><p>Every day, a little progress.</p></header>
 <section class="panel"><h2>新しいチャンクを登録</h2><form id="chunkForm"><label for="language">言語</label><select id="language"><option value="en">🇺🇸 English (US)</option><option value="de">🇩🇪 Deutsch</option></select><label for="expression">単語・チャンク</label><input id="expression" required maxlength="500" placeholder="例：What matters is to keep trying."><label for="translation">日本語訳</label><input id="translation" required maxlength="500" placeholder="例：大切なのは挑戦し続けること。"><p><button type="submit">＋ 登録する</button></p></form></section>
 <section class="panel"><h2>復習モード</h2><div class="grid"><div><label for="reviewSet">復習する表現</label><select id="reviewSet"><option value="pending">通常の復習（復習が必要）</option><option value="learned">覚えた表現の復習</option><option value="all">すべて復習</option></select></div><div><label for="reviewLang">復習する言語</label><select id="reviewLang"><option value="all">すべて</option><option value="en">🇺🇸 English (US)</option><option value="de">🇩🇪 Deutsch</option></select></div></div><label for="direction">出題方法</label><select id="direction"><option value="ja">日本語 → 英語・ドイツ語</option><option value="foreign">英語・ドイツ語 → 日本語</option><option value="random">ランダム（両方向）</option></select><p class="hint small">覚えた表現は通常の復習には出ません。必要なときに選んで復習できます。</p><button id="start" type="button">復習を始める</button><div id="review" aria-live="polite"></div></section>
-<section class="panel" id="listeningPanel"><h2>🎧 リスニング復習モード</h2><p class="hint small">日本語を聞いて英語・ドイツ語を考え、5秒後に答えを聞きます。次の表現へ自動で進みます。</p><div class="grid"><div><label for="listenSet">復習する表現</label><select id="listenSet"><option value="pending">通常の復習（復習が必要）</option><option value="learned">覚えた表現の復習</option><option value="all">すべて復習</option></select></div><div><label for="listenLang">復習する言語</label><select id="listenLang"><option value="all">すべて</option><option value="en">🇺🇸 English (US)</option><option value="de">🇩🇪 Deutsch</option></select></div></div><div class="listen-controls" style="margin-top:16px"><button id="listenStart" type="button">▶ 連続再生スタート</button><button id="listenStop" type="button" class="secondary" disabled>■ 停止</button></div><p id="listenStatus" class="listen-status" role="status" aria-live="polite">停止中</p><div id="listenCurrent" class="listen-text hidden" aria-live="off"></div><p class="listen-note">運転前に再生を開始してください。iPhoneの画面ロック中や他のアプリに切り替えた場合は、ブラウザの制限で再生が止まることがあります。まずは画面を開いた状態でお試しください。</p></section>
-<section class="panel"><div class="toolbar"><h2>登録した表現 <span id="count">(0)</span></h2><select id="filter" aria-label="言語で絞り込み"><option value="all">すべて</option><option value="en">🇺🇸 English (US)</option><option value="de">🇩🇪 Deutsch</option></select></div><div id="list"></div><div class="notice">データはこのブラウザ内に保存されます。別のブラウザや端末には自動同期されません。</div></section><section class="panel"><h2>データのバックアップ</h2><p class="hint small">登録した表現と学習状況をファイルに保存できます。定期的なバックアップをおすすめします。</p><div class="actions"><button id="exportData" type="button">⬇ バックアップを保存</button><button id="importData" type="button" class="secondary">⬆ バックアップから復元</button></div><input id="backupFile" type="file" accept=".json,application/json" class="hidden" aria-label="バックアップファイルを選択"><p id="backupMessage" class="hint small" aria-live="polite"></p></section><footer>My Language Chunks · Version 0.8</footer></main>
+<section class="panel" id="listeningPanel"><h2>🎧 リスニング復習モード</h2><p class="hint small">日本語を聞いて英語・ドイツ語を考え、5秒後に答えを聞きます。次の表現へ自動で進みます。</p><div class="grid"><div><label for="listenSet">復習する表現</label><select id="listenSet"><option value="pending">通常の復習（復習が必要）</option><option value="learned">覚えた表現の復習</option><option value="all">すべて復習</option></select></div><div><label for="listenLang">復習する言語</label><select id="listenLang"><option value="all">すべて</option><option value="en">🇺🇸 English (US)</option><option value="de">🇩🇪 Deutsch</option></select></div></div><div class="listen-controls" style="margin-top:16px"><button id="listenStart" type="button">▶ 連続再生スタート</button><button id="listenStop" type="button" class="secondary" disabled>■ 停止</button></div><p id="listenStatus" class="listen-status" role="status" aria-live="polite">停止中</p><p id="wakeState" class="wake-state" role="status" aria-live="polite">画面の自動ロック防止：停止中</p><div id="listenCurrent" class="listen-text hidden" aria-live="off"></div><p class="listen-note">再生中は画面が自動で消えないようにします（対応端末のみ）。サイドボタンで手動ロックした場合や他のアプリに切り替えた場合は、音声が止まることがあります。運転前に再生を開始し、運転中は画面を操作しないでください。画面をつけたままにすると電池の消費が増えます。</p></section>
+<section class="panel"><div class="toolbar"><h2>登録した表現 <span id="count">(0)</span></h2><select id="filter" aria-label="言語で絞り込み"><option value="all">すべて</option><option value="en">🇺🇸 English (US)</option><option value="de">🇩🇪 Deutsch</option></select></div><div id="list"></div><div class="notice">データはこのブラウザ内に保存されます。別のブラウザや端末には自動同期されません。</div></section><section class="panel"><h2>データのバックアップ</h2><p class="hint small">登録した表現と学習状況をファイルに保存できます。定期的なバックアップをおすすめします。</p><div class="actions"><button id="exportData" type="button">⬇ バックアップを保存</button><button id="importData" type="button" class="secondary">⬆ バックアップから復元</button></div><input id="backupFile" type="file" accept=".json,application/json" class="hidden" aria-label="バックアップファイルを選択"><p id="backupMessage" class="hint small" aria-live="polite"></p></section><footer>My Language Chunks · Version 0.9</footer></main>
 <script>
 'use strict';
 const KEY='my-language-chunks-v1';
@@ -31,9 +31,41 @@ $('importData').addEventListener('click',()=>{if(!storageOk){alert('現在の保
 $('backupFile').addEventListener('change',async e=>{const file=e.target.files&&e.target.files[0];if(!file)return;try{if(file.size>5*1024*1024)throw Error('ファイルが大きすぎます（上限5MB）。');const parsed=JSON.parse(await file.text());if(!parsed||parsed.app!=='My Language Chunks'||parsed.version!==1||!Array.isArray(parsed.chunks))throw Error('このアプリのバックアップファイルではありません。');const restored=parsed.chunks.map((x,i)=>{if(!x||typeof x.text!=='string'||typeof x.ja!=='string'||!['en','de'].includes(x.lang)||!x.text.trim()||!x.ja.trim()||x.text.length>500||x.ja.length>500)throw Error('バックアップの内容が正しくありません。');return {id:typeof x.id==='string'&&x.id?x.id:'restored-'+i,lang:x.lang,text:x.text,ja:x.ja,learned:x.learned===true}});if(restored.length>10000)throw Error('登録件数が多すぎます。');const ids=new Set(restored.map(x=>x.id));if(ids.size!==restored.length)throw Error('重複するIDがあります。');if(!confirm('現在の登録データ '+chunks.length+' 件を、バックアップの '+restored.length+' 件で置き換えます。現在のデータは上書きされます。続けますか？'))return;if(save(restored)){queue=[];position=0;$('review').replaceChildren();render();$('backupMessage').textContent='復元しました（'+restored.length+' 件）。'}}catch(err){alert('復元できませんでした。'+err.message)}finally{e.target.value=''}});
 // Listening mode: Japanese prompt, five-second recall, target-language answer.
 let listenRun=0,listenTimer=null,listenActive=false,listenQueue=[],listenIndex=0;
+let listenWakeLock=null;
+function wakeStatus(message){$('wakeState').textContent='画面の自動ロック防止：'+message}
+async function requestListenWakeLock(){
+  if(!listenActive)return;
+  if(!('wakeLock' in navigator)){
+    wakeStatus('この環境では利用できません');return;
+  }
+  if(document.visibilityState!=='visible'){
+    wakeStatus('画面が非表示のため解除中');return;
+  }
+  if(listenWakeLock&&!listenWakeLock.released){
+    wakeStatus('有効（再生中は画面を保持）');return;
+  }
+  try{
+    const lock=await navigator.wakeLock.request('screen');
+    if(!listenActive){await lock.release();return}
+    listenWakeLock=lock;
+    wakeStatus('有効（再生中は画面を保持）');
+    lock.addEventListener('release',()=>{
+      if(listenWakeLock===lock){
+        listenWakeLock=null;
+        wakeStatus(listenActive?'解除されました（画面ロックにご注意ください）':'停止中');
+      }
+    });
+  }catch(e){wakeStatus('利用できません（端末の設定などをご確認ください）')}
+}
+function releaseListenWakeLock(){
+  const lock=listenWakeLock;
+  listenWakeLock=null;
+  wakeStatus('停止中');
+  if(lock&&!lock.released)lock.release().catch(()=>{});
+}
 function listenClearTimer(){if(listenTimer!==null){clearTimeout(listenTimer);listenTimer=null}}
 function listenStop(message='停止中'){
-  listenRun++;listenActive=false;listenClearTimer();
+  listenRun++;listenActive=false;listenClearTimer();releaseListenWakeLock();
   if('speechSynthesis'in window)speechSynthesis.cancel();
   $('listenStart').disabled=false;$('listenStop').disabled=true;
   $('listenStatus').textContent=message;
@@ -82,6 +114,8 @@ $('listenStart').addEventListener('click',()=>{
   listenStop();listenQueue=selected.slice();
   for(let i=listenQueue.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[listenQueue[i],listenQueue[j]]=[listenQueue[j],listenQueue[i]]}
   listenIndex=0;listenActive=true;
+  // Request screen wake lock during the tap event; speaking remains gesture-initiated.
+  void requestListenWakeLock();
   $('listenStart').disabled=true;$('listenStop').disabled=false;
   // Start speech immediately within the user gesture, important on mobile Safari.
   const run=listenRun;
@@ -89,6 +123,9 @@ $('listenStart').addEventListener('click',()=>{
   listenNext(run);
 });
 $('listenStop').addEventListener('click',()=>listenStop());
+document.addEventListener('visibilitychange',()=>{
+  if(listenActive&&document.visibilityState==='visible')void requestListenWakeLock();
+});
 window.addEventListener('pagehide',()=>{if(listenActive)listenStop()});
 
 $('start').addEventListener('click',start);render();
